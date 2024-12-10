@@ -1,4 +1,4 @@
-package com.fiap.spinrgblog.model;
+package com.fiap.springblog.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
