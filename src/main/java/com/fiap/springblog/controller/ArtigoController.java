@@ -29,4 +29,9 @@ public class ArtigoController {
         System.out.println("Controller" + artigo.toString());
         return this.artigoService.criar(artigo);
     }
+
+    @GetMapping("/maiordata")
+    public List<Artigo> findByDataGreaterThan(@RequestParam("data") LocalDateTime dateTime) {
+        return  this.artigoService.findByDataGreaterThan(dateTime);
+    }
 }
