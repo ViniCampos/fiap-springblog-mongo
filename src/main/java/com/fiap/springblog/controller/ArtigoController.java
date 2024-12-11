@@ -34,4 +34,12 @@ public class ArtigoController {
     public List<Artigo> findByDataGreaterThan(@RequestParam("data") LocalDateTime dateTime) {
         return  this.artigoService.findByDataGreaterThan(dateTime);
     }
+
+    @GetMapping("/data-status")
+    public List<Artigo> findByDataAndStatus(
+            @RequestParam("data") LocalDateTime dateTime,
+            @RequestParam("status") Integer status) {
+        return this.artigoService.findByDataAndStatus(dateTime, status);
+    }
+
 }

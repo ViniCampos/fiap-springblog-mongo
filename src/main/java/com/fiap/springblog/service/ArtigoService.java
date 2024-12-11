@@ -11,5 +11,6 @@ public interface ArtigoService {
     public Artigo obterPorCodigo(String codigo);
     public Artigo criar(Artigo artigo);
     public List<Artigo> findByDataGreaterThan(LocalDateTime dateTime);
+    public List<Artigo> findByDataAndStatus(LocalDateTime dateTime, Integer status);
 
 }
