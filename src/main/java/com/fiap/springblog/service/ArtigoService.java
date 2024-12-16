@@ -12,5 +12,5 @@ public interface ArtigoService {
     public Artigo criar(Artigo artigo);
     public List<Artigo> findByDataGreaterThan(LocalDateTime dateTime);
     public List<Artigo> findByDataAndStatus(LocalDateTime dateTime, Integer status);
-
+    public void atualizar(Artigo updateArtigo);
 }

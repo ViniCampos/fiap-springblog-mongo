@@ -42,4 +42,9 @@ public class ArtigoController {
         return this.artigoService.findByDataAndStatus(dateTime, status);
     }
 
+    @PutMapping
+    public void atualizar(@RequestBody Artigo updateArtigo) {
+        this.artigoService.atualizar(updateArtigo);
+    }
+
 }
