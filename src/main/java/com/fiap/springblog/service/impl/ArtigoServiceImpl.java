@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -76,4 +77,27 @@ public class ArtigoServiceImpl implements ArtigoService {
         this.artigoRepository.save(updateArtigo);
     }
 
+    //Update Complexo, sempre utilizar assim por questão de segurança
+    @Override
+    public void atualizarArtigo(String Id, String novaURL) {
+        System.out.println("NOVA URL ---------------------- >" + novaURL);
+        //Cria critério + condição de update
+        Query query = new Query(Criteria.where("_id").is(Id));
+        Update update = new Update().set("url",novaURL);
+        //Executa comando
+        this.mongoTemplate.updateFirst(query,update,Artigo.class);
+    }
+
+    //DELTA USANDO ARTIGO REPOSITORY
+    @Override
+    public void deleteById(String id) {
+        this.artigoRepository.deleteById(id);
+    }
+
+    //DELTA USANDO ARTIGO USANDO MONGOTEMPLATE
+    @Override
+    public void deleteArtigoById(String id) {
+        Query query = new Query(Criteria.where("_id").is(id));
+        this.mongoTemplate.remove(query, Artigo.class);
+    }
 }

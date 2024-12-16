@@ -47,4 +47,20 @@ public class ArtigoController {
         this.artigoService.atualizar(updateArtigo);
     }
 
+    @PutMapping("/{Id}")
+    public void atualizarArtigo(@PathVariable String Id, @RequestBody String novaURL) {
+        System.out.println("NOVA URL ---------------------- >" + novaURL);
+        this.artigoService.atualizarArtigo(Id, novaURL);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteArtigo(@PathVariable String id) {
+        this.artigoService.deleteById(id);
+    }
+
+    @DeleteMapping("/delete")
+    public void deleteArtigoById(@RequestParam("Id") String id) {
+        this.artigoService.deleteArtigoById(id);
+    }
+
 }
