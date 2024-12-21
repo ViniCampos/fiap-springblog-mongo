@@ -136,4 +136,9 @@ public class ArtigoServiceImpl implements ArtigoService {
     public List<Artigo> findByStatusOrderByTituloAsc(Integer Status) {
         return this.artigoRepository.findByStatusOrderByTituloAsc(Status);
     }
+
+    @Override
+    public List<Artigo> obterArtigoPorStatusComOrdenacao(Integer Status) {
+        return this.artigoRepository.obterArtigoPorStatusComOrdenacao(Status);
+    }
 }
