@@ -131,4 +131,9 @@ public class ArtigoServiceImpl implements ArtigoService {
     public Page<Artigo> listaArtigosPaginado(Pageable pageable) {
         return this.artigoRepository.findAll(pageable);
     }
+
+    @Override
+    public List<Artigo> findByStatusOrderByTituloAsc(Integer Status) {
+        return this.artigoRepository.findByStatusOrderByTituloAsc(Status);
+    }
 }
