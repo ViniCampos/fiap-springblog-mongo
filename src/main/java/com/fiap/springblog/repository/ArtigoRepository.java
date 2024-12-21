@@ -17,12 +17,12 @@ public interface ArtigoRepository extends MongoRepository<Artigo, String> {
     //INITIATING ADVANCED QUERY
     public List<Artigo> findByStatusAndDataGreaterThan(Integer Status, LocalDateTime data);
 
-    @Query("{ $and: [ {'data':{$gte: ?0}}, {'data':{$lte: $1}} ]}")
+    @Query("{ $and: [ {'data':{$gte: ?0}}, {'data':{$lte: ?1}} ]}")
     public List<Artigo> obterArtigoPorDataHora(LocalDateTime de, LocalDateTime ate);
     //http://localhost:8080/artigos/periodoo?de=2023-12-10T15:34:56.000&ate=2025-12-10T15:34:56.000
 
     //Init Pagebke from mongo repository
-    Page<Artigo> findAll(Pageable pageable);
+    public Page<Artigo> findAll(Pageable pageable);
 
     //Sort using Query
     public List<Artigo> findByStatusOrderByTituloAsc(Integer Status);
