@@ -13,6 +13,8 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -99,5 +101,29 @@ public class ArtigoServiceImpl implements ArtigoService {
     public void deleteArtigoById(String id) {
         Query query = new Query(Criteria.where("_id").is(id));
         this.mongoTemplate.remove(query, Artigo.class);
+    }
+
+    @Override
+    public List<Artigo> findByStatusAndDataGreaterThan(Integer Status, LocalDateTime data) {
+        return this.artigoRepository.findByStatusAndDataGreaterThan(Status, data);
+    }
+
+    @Override
+    public List<Artigo> obterArtigoPorDataHora(LocalDateTime de, LocalDateTime ate) {
+        return this.artigoRepository.obterArtigoPorDataHora(de, ate);
+    }
+
+    @Override
+    public List<Artigo> encontrarArtigosComplexos(Integer status, LocalDateTime data, String titulo) {
+        Criteria criteria = new Criteria();
+        criteria.and("data").lte(data);
+        if (status != null) {
+            criteria.and("Status").is(status);
+        }
+        if(titulo != null && !titulo.isEmpty()) {
+            criteria.and("titulo").regex(titulo, "i"); //ignora capital letters
+        }
+        Query query = new Query(criteria);
+        return mongoTemplate.find(query, Artigo.class);
     }
 }

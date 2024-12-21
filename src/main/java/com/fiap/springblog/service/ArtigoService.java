@@ -1,6 +1,7 @@
 package com.fiap.springblog.service;
 
 import com.fiap.springblog.model.Artigo;
+import org.springframework.data.mongodb.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,4 +17,7 @@ public interface ArtigoService {
     public void atualizarArtigo(String Id, String novaURL);
     public void deleteById(String id);
     public void deleteArtigoById(String id);
+    public List<Artigo> findByStatusAndDataGreaterThan(Integer Status, LocalDateTime data);
+    public List<Artigo> obterArtigoPorDataHora(LocalDateTime de, LocalDateTime ate);
+    public List<Artigo> encontrarArtigosComplexos(Integer status, LocalDateTime data, String titulo);
 }
