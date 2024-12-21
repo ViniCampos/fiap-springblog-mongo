@@ -27,4 +27,8 @@ public interface ArtigoRepository extends MongoRepository<Artigo, String> {
     //Sort using Query
     public List<Artigo> findByStatusOrderByTituloAsc(Integer Status);
 
+    @Query(
+            value = "{'status': { $eq: ?0 }}", //Utiliza primeiro elemento recebido no método
+            sort = "{ 'titulo': 1 }") //Ordena Asc
+    public List<Artigo> obterArtigoPorStatusComOrdenacao(Integer Status);
 }
