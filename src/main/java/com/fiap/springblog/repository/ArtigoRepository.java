@@ -1,6 +1,8 @@
 package com.fiap.springblog.repository;
 
 import com.fiap.springblog.model.Artigo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
@@ -19,5 +21,7 @@ public interface ArtigoRepository extends MongoRepository<Artigo, String> {
     public List<Artigo> obterArtigoPorDataHora(LocalDateTime de, LocalDateTime ate);
     //http://localhost:8080/artigos/periodoo?de=2023-12-10T15:34:56.000&ate=2025-12-10T15:34:56.000
 
+    //Init Pagebke from mongo repository
+    Page<Artigo> findAll(Pageable pageable);
 
 }

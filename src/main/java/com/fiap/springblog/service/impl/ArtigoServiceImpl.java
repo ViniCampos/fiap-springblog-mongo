@@ -6,6 +6,8 @@ import com.fiap.springblog.repository.ArtigoRepository;
 import com.fiap.springblog.repository.AutorRepository;
 import com.fiap.springblog.service.ArtigoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -13,8 +15,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -125,5 +125,10 @@ public class ArtigoServiceImpl implements ArtigoService {
         }
         Query query = new Query(criteria);
         return mongoTemplate.find(query, Artigo.class);
+    }
+
+    @Override
+    public Page<Artigo> listaArtigosPaginado(Pageable pageable) {
+        return this.artigoRepository.findAll(pageable);
     }
 }
