@@ -25,4 +25,5 @@ public interface ArtigoService {
     public Page<Artigo> listaArtigosPaginado(Pageable pageable);
     public List<Artigo> findByStatusOrderByTituloAsc(Integer Status);
     public List<Artigo> obterArtigoPorStatusComOrdenacao(Integer Status);
+    public List<Artigo> findByTexto(String searchTerm);
 }

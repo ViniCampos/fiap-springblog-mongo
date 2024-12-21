@@ -1,6 +1,7 @@
 package com.fiap.springblog.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,7 +13,14 @@ public class Artigo {
     private String codigo;
     private String titulo;
     private LocalDateTime data;
+
+    @TextIndexed //Indexa texto para permitir o search
     private String texto;
+    //No mongo criar o index
+    // db.artigo.createIndex({
+    //  texto: 'text'
+    // })
+
     private String url;
     private Integer status;
     @DBRef
