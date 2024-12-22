@@ -27,3 +27,21 @@ db.customers.insertOne({nome:"Vini", idade:28})
 db.customers.find()  
 db.customers.find({}, {"_id":0}) //EXIBE TODOS DOCS E SOME COM _ID  
 db.customers.find().pretty()  
+
+
+### Como testar transações
+Usando o documento já criado com este ID: 6768234247eb735394889b7c  
+curl --request PUT \  
+--url http://localhost:8080/artigos \  
+--header 'Content-Type: application/json' \  
+--data '	{  
+"codigo": "6768234247eb735394889b7c", 
+"titulo": "Artigo Atualizado 3",  
+"data": "2024-12-10T12:34:56",  
+"texto": "Texto do artigo.",  
+"url": "http://exemplo.com",  
+"status": 1,  
+"autor": { 
+ "codigo": "6758de192d57e11cf63e5dd0" },  
+"version": 0  
+}'

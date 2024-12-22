@@ -8,6 +8,7 @@ import com.fiap.springblog.repository.ArtigoRepository;
 import com.fiap.springblog.repository.AutorRepository;
 import com.fiap.springblog.service.ArtigoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -86,7 +87,27 @@ public class ArtigoServiceImpl implements ArtigoService {
     @Transactional
     @Override
     public void atualizar(Artigo updateArtigo) {
-        this.artigoRepository.save(updateArtigo);
+        try {
+            this.artigoRepository.save(updateArtigo);
+        } catch (OptimisticLockingFailureException ex) {
+            //DESENVOLVER ESTRATÉGIA
+            //1. Recuperar o documento mais recente
+            Artigo atualizado = this.artigoRepository.findById(updateArtigo.getCodigo()).orElse(null);
+            if(atualizado != null) {
+                //2. Atualizar os campos desejados
+                atualizado.setTitulo(updateArtigo.getTitulo());
+                atualizado.setTexto(updateArtigo.getTexto());
+                atualizado.setStatus(updateArtigo.getStatus());
+                atualizado.setData(updateArtigo.getData());
+
+                //3. Incrementar a versão manualmente
+                atualizado.setVersion(atualizado.getVersion()); //Erro tratado, comentar essa linha para ver o erro
+
+                //Tentar salvar
+                this.artigoRepository.save(atualizado);
+            } else
+                throw  new RuntimeException("Artigo nãoo encontrado" + updateArtigo.getCodigo());
+        }
     }
 
     //Update Complexo, sempre utilizar assim por questão de segurança
