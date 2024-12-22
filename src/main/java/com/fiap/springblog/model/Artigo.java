@@ -1,6 +1,7 @@
 package com.fiap.springblog.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -25,6 +26,17 @@ public class Artigo {
     private Integer status;
     @DBRef
     private Autor autor;
+
+    @Version
+    private Long version; //CONTROLE DE CONCORRÊNCIA
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
 
     public Autor getAutor() {
         return autor;
