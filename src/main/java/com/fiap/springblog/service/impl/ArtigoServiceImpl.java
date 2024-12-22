@@ -179,11 +179,18 @@ public class ArtigoServiceImpl implements ArtigoService {
     public List<AutorTotalArtigo> calcularTotalArtigosPorAutorNoPeriodo(LocalDate dataInicio, LocalDate dataFim) {
         TypedAggregation<Artigo> aggregation = Aggregation.newAggregation(
                 Artigo.class,
-                Aggregation.match(
+                Aggregation.match( //FILTRO
                         Criteria.where("data")
                                 .gte(dataInicio.atStartOfDay()) //Dia do servidor às 00h
-                                .lte()
-                )
-        )
+                                .lte(dataFim.atStartOfDay())
+                ),
+                Aggregation.group("autor").count().as("totalArtigos"), //AGRUPAMENTO
+                Aggregation.project("totalArtigos").and("autor").previousOperation() //Sempre da direita para esquerda
+        );
+        AggregationResults<AutorTotalArtigo> result = mongoTemplate.aggregate(
+                aggregation,
+                AutorTotalArtigo.class
+        );
+        return result.getMappedResults();
     }
 }

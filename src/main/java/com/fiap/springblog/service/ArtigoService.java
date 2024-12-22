@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.Query;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,5 +30,5 @@ public interface ArtigoService {
     public List<Artigo> obterArtigoPorStatusComOrdenacao(Integer Status);
     public List<Artigo> findByTexto(String searchTerm);
     public List<ArtigoStatusCount> contarArtigosPorStatus();
-    public List<AutorTotalArtigo> calcularTotalArtigosPorAutorNoPeriodo(LocalDateTime dataInicio, LocalDateTime dataFim);
+    public List<AutorTotalArtigo> calcularTotalArtigosPorAutorNoPeriodo(LocalDate dataInicio, LocalDate dataFim);
 }
