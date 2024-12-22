@@ -16,6 +16,7 @@ https://www.mongodb.com/products/tools/compass
 ### Uso do shell
 Caso esteja utilizando com docker, ele já vem com o shell na imagem. Do contrário, necessário baixar o shell separado  
 Utilizar o shell: docker exec -it meu_mongo mongosh
+Acessar console do container: docker exec -it meu_mongo bash
 
 #### Comandos utéis: 
 show dbs  
@@ -45,3 +46,36 @@ curl --request PUT \
  "codigo": "6758de192d57e11cf63e5dd0" },  
 "version": 0  
 }'
+
+## FAZENDO BACKUP AND RESTORE O MONGO
+### Caso Local
+Instalar https://www.mongodb.com/try/download/database-tools  
+Copiar para mongodb/server/{version}/bin  
+mongodump --out={Seu Path}  
+mongorestore --nsInclude=blog.* --host=localhost --port=27017 "{path_do_backup}
+
+## Caso docker
+-- docker exec -it meu_mongo mongodump --out={PATH}  
+-- docker exec -it meu_mongo mongorestore --drop --db nome_do_banco /dump/nome_do_banco  
+  
+OBS - Para salvar os dados na máquina local (fora do container), será necessário mapear a pasta na criação do banco, após isso os arquivos serão salvos corretamente  
+-- docker run -d --name meu_mongo -v C:\Users\Vinic\mongodb:/backup mongo  
+
+### Fazendo test com docker com imagem local  
+#### Criando backup  
+Roda comando criando conexão entre pasta local e container  
+-- docker run -d --name meu_mongo -v C:\Users\Vinic\mongodb:/backup mongo  
+
+Roda comando criando conexão entre pasta local e container  
+-- docker exec -it meu_mongo mongodump --out=/backup
+
+Deletando DB  
+-- docker exec -it meu_mongo2 mongosh
+-- use test
+-- db.dropDatabase()
+
+Recriando DB  
+-- docker exec -it meu_mongo mongorestore --drop /backup
+
+#### OBS - Copiando arquivo do container para máquina local
+docker cp meu_mongo:/data/backup C:\Users\Vinic\mongodb
