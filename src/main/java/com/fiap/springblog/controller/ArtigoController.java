@@ -43,11 +43,11 @@ public class ArtigoController {
         return artigoService.obterPorCodigo(codigo);
     }
 
-    @PostMapping
+/*    @PostMapping
     public Artigo criar(@RequestBody Artigo artigo) {
         System.out.println("Controller" + artigo.toString());
         return this.artigoService.criar(artigo);
-    }
+    }*/
 
     @GetMapping("/maiordata")
     public List<Artigo> findByDataGreaterThan(@RequestParam("data") LocalDateTime dateTime) {
@@ -132,6 +132,13 @@ public class ArtigoController {
             @RequestParam("dataInicio") LocalDate dataInicio,
             @RequestParam("dataFim") LocalDate dataFim) {
         return this.artigoService.calcularTotalArtigosPorAutorNoPeriodo(dataInicio, dataFim);
+    }
+
+
+    //////////////////////// AULA 5 //////////////////////////////
+    @PostMapping
+    public ResponseEntity<?> criar(@RequestBody Artigo artigo) {
+        return this.artigoService.criar(artigo);
     }
 
 }
