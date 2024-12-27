@@ -80,3 +80,67 @@ Recriando DB
 
 #### OBS - Copiando arquivo do container para máquina local
 docker cp meu_mongo:/data/backup C:\Users\Vinic\mongodb
+
+
+## PASSOS PARA CRIAR A REPLICAÇÃO DO MONGO EM NÓS
+**1 - Criar 3 pastas de config e 2 pastas de shard**  
+mkdir C:\data\db\configdb{NUMERO_DO_CONFIG}  
+mkdir C:\data\db\shard{NUMERO_DO_SHARD}  
+
+**2 - Criar configuradores (Criar um em cada pronpt)**  
+mongod --configsvr --port 28041 --bind_ip localhost --replSet  config_repl --dbpath C:\data\db\configdb1  
+mongod --configsvr --port 28042 --bind_ip localhost --replSet  config_repl --dbpath C:\data\db\configdb2  
+mongod --configsvr --port 28043 --bind_ip localhost --replSet  config_repl --dbpath C:\data\db\configdb3  
+
+**3 - Configurar o conjunto de regras (Novo pronpt)**  //A PARTIR DAQUI TEMOS 3 REPLICADORES DE DADOS  
+mongosh --host localhost --port 28041  
+rsconf = 
+```json
+rsconf = {	
+  _id: "config_repl",  
+  members: [
+    {_id:0,host: "localhost:28041"},
+    {_id:1,host: "localhost:28042"},
+    {_id:2,host: "localhost:28043"}
+  ]
+}
+```
+rs.initiate(rsconf)  
+rs.status(); //Ver status dos configuradores  
+
+**4 - Criar os shards (Fragmentação dos dados - Novo pronpt)**  
+mongod --shardsvr --port 28081 --bind_ip localhost --replSet shard_repl1 --dbpath C:\data\db\shard1  
+
+**5 - Entrar no shard e ativar (Novo pronpt)**  
+mongosh --host localhost --port 28081  
+```json 
+rsconf = {_id: "shard_repl1",members: [{_id:0,host: "localhost:28081"}]}
+```  
+rs.initiate(reconf)  
+rs.status()
+show dbs //JÁ DEVE VER AQUI A REPLICAÇÃO PARA ESSE SHARD (NOVO BANCO)  
+
+**6 - Repetir para criar o novo shard**  
+
+**7 - Criar servidor de roteamento (Máquina proxy - Novo pronpt)**
+**//EXECUTA mongoS expondo em uma nova porta o servidor e setando o config 1 como nó principal de configuração**  
+mongos --configdb config_repl/localhost:28041 --bind_ip localhost --port 27040  
+
+**8 - Se conectar so servidor MONGOS e adicionar shards (novo pronpt)**  
+mongosh --hot localhost --port 27040  
+sh.addShard("shard_repl1/localhost:28081");  
+sh.addShard("shard_repl2/localhost:28082");  
+
+**9 - No mesmo pronpt de HOLDER habilitar os dbs para ocorrer o sharding e particionar as collections**
+sh.enableSharding("blog");  
+sh.shardCollection("blog.artigo", {"_id": 1});  
+sh.shardCollection("blog.autor", {"_id": 1});  
+sh.shardCollection("blog.categoria", {"_id": 1});  
+sh.status();  
+
+**10 - Ativar balanceamento**  
+sh.startBalancer();  
+sh.status();  
+sh.balancerCollectionStatus("blog.artigo"); //Olhar mais especificamente uma collection no shard 
+	
+	
