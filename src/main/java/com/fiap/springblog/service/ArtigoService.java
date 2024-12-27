@@ -37,6 +37,7 @@ public interface ArtigoService {
 
     //////////////////////// AULA 5 //////////////////////////////
     public ResponseEntity<?> criar(Artigo artigo);
+    public ResponseEntity<?> atualizarArtigo(String id, Artigo artigo);
 
 
 }

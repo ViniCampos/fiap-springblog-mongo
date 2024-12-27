@@ -239,12 +239,35 @@ public class ArtigoServiceImpl implements ArtigoService {
         try {
             this.artigoRepository.save(artigo);
             return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (DuplicateKeyException e) {
+        } catch (DuplicateKeyException e) {  //CASO TENTAR ADICIONAR UM DOCUMENTO QUE JÁ EXISTE
             System.out.println(e.toString());
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Artigo já existe na coleção!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro ao criar artigo ->  " + e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> atualizarArtigo(String id, Artigo artigo) {
+        try{
+            //Verifica se existe
+            Artigo existenteArtigo = this.artigoRepository.findById(id).orElse(null);
+            if(existenteArtigo == null)
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Artigo não encontrado na coleção");
+
+            //Caso exista, atualizar alguns dados
+            existenteArtigo.setTitulo(artigo.getTitulo());
+            existenteArtigo.setData(artigo.getData());
+            existenteArtigo.setTexto(artigo.getTexto());
+
+            //Atualiza artigo
+            this.artigoRepository.save(existenteArtigo);
+            return ResponseEntity.status(HttpStatus.OK).body(existenteArtigo);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao editar artigo ->  " + e.getMessage());
         }
     }
 

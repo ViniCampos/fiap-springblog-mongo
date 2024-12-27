@@ -141,4 +141,10 @@ public class ArtigoController {
         return this.artigoService.criar(artigo);
     }
 
+    @PutMapping("/atualizar/{Id}")
+    public ResponseEntity<?> atualizarArtigo(@PathVariable("Id") String id,
+                                             @RequestBody Artigo artigo) {
+        return this.artigoService.atualizarArtigo(id, artigo);
+    }
+
 }
