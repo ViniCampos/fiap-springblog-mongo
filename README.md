@@ -1,4 +1,13 @@
-# fiap-springblog-mongo
+# Projeto de integração JPA com MongoDB
+
+## Sumário
+1. [Sobre o Projeto](#projeto-de-integração-jpa-com-mongodb)
+2. [Documentação sobre o Mongo](#documentação-sobre-mongo)
+3. [Instalação com Docker](#instalação-do-mongo-para-usardocker)
+4. [Uso do Shell e Comandos Úteis](#uso-do-shell)
+5. [Testando Transações](#como-testar-transações)
+6. [Backup e Restore do Mongo](#fazendo-backup-and-restore-o-mongo)
+7. [Criando Replica Set e Sharding](#passos-para-criar-a-replicação-do-mongo-em-nós)
 
 ## Documentação sobre mongo
 #### https://spring.io/projects/spring-data-mongodb  
@@ -54,7 +63,7 @@ Copiar para mongodb/server/{version}/bin
 mongodump --out={Seu Path}  
 mongorestore --nsInclude=blog.* --host=localhost --port=27017 "{path_do_backup}"
 
-## Caso docker
+### Caso docker
 -- docker exec -it meu_mongo mongodump --out={PATH}  
 -- docker exec -it meu_mongo mongorestore --drop --nsInclude nome_do_banco /dump/nome_do_banco  
   
@@ -106,7 +115,8 @@ rsconf = {
 }
 ```
 rs.initiate(rsconf)  
-rs.status(); //Ver status dos configuradores  
+rs.status(); //Ver status dos configuradores
+
 
 **4 - Criar os shards (Fragmentação dos dados - Novo pronpt)**  
 mongod --shardsvr --port 28081 --bind_ip localhost --replSet shard_repl1 --dbpath C:\data\db\shard1  
@@ -142,5 +152,4 @@ sh.status();
 sh.startBalancer();  
 sh.status();  
 sh.balancerCollectionStatus("blog.artigo"); //Olhar mais especificamente uma collection no shard 
-	
-	
+
