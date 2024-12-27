@@ -4,6 +4,7 @@ import com.fiap.springblog.model.Artigo;
 import com.fiap.springblog.model.ArtigoStatusCount;
 import com.fiap.springblog.model.AutorTotalArtigo;
 import com.fiap.springblog.service.ArtigoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
@@ -143,7 +144,7 @@ public class ArtigoController {
 
     @PutMapping("/atualizar/{Id}")
     public ResponseEntity<?> atualizarArtigo(@PathVariable("Id") String id,
-                                             @RequestBody Artigo artigo) {
+                                             @Valid @RequestBody Artigo artigo) { //Uso de Valid para usar o validation
         return this.artigoService.atualizarArtigo(id, artigo);
     }
 

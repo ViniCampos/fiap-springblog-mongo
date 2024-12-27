@@ -1,5 +1,7 @@
 package com.fiap.springblog.model;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.TextIndexed;
@@ -12,9 +14,15 @@ import java.time.LocalDateTime;
 public class Artigo {
     @Id
     private String codigo;
+
+    //VALIDAÇÃO
+    @NotBlank(message = "O título do artigo não pode estar em branco.")
     private String titulo;
+
+    @NotNull(message = "A data do artigo não pode ser nula.")
     private LocalDateTime data;
 
+    @NotBlank(message = "O texto do artigo não pode estar em branco.")
     @TextIndexed //Indexa texto para permitir o search
     private String texto;
     //No mongo criar o index
@@ -23,7 +31,10 @@ public class Artigo {
     // })
 
     private String url;
+
+    @NotNull(message = "O status do artigo não pode ser nulo.")
     private Integer status;
+
     @DBRef
     private Autor autor;
 
