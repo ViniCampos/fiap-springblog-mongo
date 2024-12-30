@@ -153,3 +153,21 @@ sh.startBalancer();
 sh.status();  
 sh.balancerCollectionStatus("blog.artigo"); //Olhar mais especificamente uma collection no shard 
 
+### Usando writeConcern
+Acessar manual em https://www.mongodb.com/docs/manual/reference/write-concern/   
+No servidor host (27040) executar os comandos:  
+```json
+use blog
+da.autor.insertOne(
+	{ nome: "Rogerio Dutra", bio: "Contador", imagem: "jpg" },
+	{ writeConcern: { w: "majority" } }	//Replicar para maioria dos nós
+)
+da.autor.insertOne(
+	{ nome: "Sergio Borges", bio: "Advogado", imagem: "png" },
+	{ writeConcern: { w: 2 } }	//Replicar para 2 réplicas
+)
+da.autor.insertOne(
+	{ nome: "Marilda Ok", bio: Medica", imagem: "png" },
+	{ writeConcern: { w: 1, wtimeout: 5000 } }	//Replicar para 1 e 5000ms para timeout
+)
+```
