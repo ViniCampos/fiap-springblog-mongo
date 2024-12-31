@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -23,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,6 +37,9 @@ public class ArtigoServiceImpl implements ArtigoService {
     private ArtigoRepository artigoRepository;
     @Autowired
     private AutorRepository autorRepository;
+    @Autowired
+    private MongoTransactionManager transactionManager; //Injeção da lib que garante transação no mongo
+
 
     ///PARA CONSULTAS COMPLEXAS////
     private final MongoTemplate mongoTemplate;
@@ -269,6 +274,28 @@ public class ArtigoServiceImpl implements ArtigoService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro ao editar artigo ->  " + e.getMessage());
         }
+    }
+
+    @Override
+    public ResponseEntity<?> criarArtigoComAutor(Artigo artigo, Autor autor) {
+        //O mongo por natureza não é um banco transacional, portanto precisamos implementar isso via aplicação
+        //Utilizar a BEAN Injetada
+        TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
+        transactionTemplate.execute(status -> {
+           try {
+               //Iniciar transação
+               autorRepository.save(autor);
+               artigo.setData(LocalDateTime.now());
+               artigo.setAutor(autor);
+               artigoRepository.save(artigo);
+           } catch (Exception e){
+               //Trata o erro e lança a transação de volta
+               status.setRollbackOnly();
+               throw new RuntimeException("Erro ao criar artigo com autor: " + e.getMessage());
+           }
+           return  null;
+        });
+        return ResponseEntity.status(HttpStatus.OK).body(artigo);
     }
 
 }

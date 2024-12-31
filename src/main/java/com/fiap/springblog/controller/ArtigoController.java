@@ -1,8 +1,6 @@
 package com.fiap.springblog.controller;
 
-import com.fiap.springblog.model.Artigo;
-import com.fiap.springblog.model.ArtigoStatusCount;
-import com.fiap.springblog.model.AutorTotalArtigo;
+import com.fiap.springblog.model.*;
 import com.fiap.springblog.service.ArtigoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,15 +135,23 @@ public class ArtigoController {
 
 
     //////////////////////// AULA 5 //////////////////////////////
-    @PostMapping
+/*    @PostMapping
     public ResponseEntity<?> criar(@RequestBody Artigo artigo) {
         return this.artigoService.criar(artigo);
-    }
+    }*/
 
     @PutMapping("/atualizar/{Id}")
     public ResponseEntity<?> atualizarArtigo(@PathVariable("Id") String id,
                                              @Valid @RequestBody Artigo artigo) { //Uso de Valid para usar o validation
         return this.artigoService.atualizarArtigo(id, artigo);
     }
+
+    @PostMapping
+    public ResponseEntity<?> criarArtigoComAutor(@RequestBody ArtigoAutorRequest request) {
+        Artigo artigo = request.getArtigo();
+        Autor autor = request.getAutor();
+        return this.artigoService.criarArtigoComAutor(artigo, autor);
+    }
+
 
 }
